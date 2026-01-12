@@ -10,6 +10,7 @@ from .serializers import (
     OTPVerifySerializer,
     ResetPasswordSerializer,
     ProfileSerializer,
+    CreateUserSerializer
 )
 from .utils.email import send_otp_email
 from .utils.otp import(
@@ -19,7 +20,7 @@ from .utils.otp import(
     delete_otp,
 )
 from .models import Profile
-
+from .permissions import IsOwnerAdmin
 User = get_user_model()
 
 class LoginView(APIView):
@@ -131,3 +132,11 @@ class ProfileView(APIView):
             "data": serializer.data
         })
 
+class CreateUserView(APIView):
+    permission_classes = [IsAuthenticated,IsOwnerAdmin]
+
+    def post(self,request):
+        serializer = CreateUserSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "User created successfully"},status=201)

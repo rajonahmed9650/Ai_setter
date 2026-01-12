@@ -6,7 +6,7 @@ from .models import Profile
 User = get_user_model()
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.EmailField(write_only =True)
+    email = serializers.EmailField(write_only=True)
     password = serializers.CharField(write_only=True)
 
     access = serializers.CharField(read_only=True)
@@ -22,17 +22,19 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("Invalid credentials")
 
         if not user.check_password(password):
-            raise serializers.ValidationError("Invalid credentials")
+            raise serializers.ValidationError({"password": "Wrong password"})
 
-        if not user.is_superuser:
-            raise serializers.ValidationError("Not allowed")
+        if not user.is_active:
+            raise serializers.ValidationError("Account disabled")
 
         refresh = RefreshToken.for_user(user)
 
         return {
             "access": str(refresh.access_token),
             "refresh": str(refresh),
+            "is_staff": user.is_staff,
         }
+
 
 class ForgotPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -54,9 +56,6 @@ class ResetPasswordSerializer(serializers.Serializer):
 
 
 # accounts/serializers.py
-from rest_framework import serializers
-from .models import Profile
-
 
 class ProfileSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source="user.first_name",required=False)
@@ -85,3 +84,16 @@ class ProfileSerializer(serializers.ModelSerializer):
         return instance
    
        
+class CreateUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only = True)
+
+    class Meta:
+        model = User
+        fields = ["email","username","password"]
+
+    def create(self, validated_data):
+        return User.objects.create_user(
+            email = validated_data["email"],
+            username = validated_data["username"],
+            password = validated_data["password"],
+        )           
