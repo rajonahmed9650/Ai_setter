@@ -15,12 +15,15 @@ class Lead(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class LeadScroingRule(models.Model):
-    title = models.CharField(max_length=255 )
+class LeadScoringRule(models.Model):
+    title = models.CharField(max_length=255)
     points = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.title 
+        return self.title
+ 
 
 class Question(models.Model):
     question = models.CharField(max_length=255)
