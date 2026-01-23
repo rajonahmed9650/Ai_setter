@@ -23,6 +23,7 @@ urlpatterns = [
     path("",include("accounts.urls")),
     path("",include("lead.urls")),
     path("",include("clients.urls")),
+    path("",include("conversation.urls"))
 ]
 
 if settings.DEBUG:
