@@ -9,12 +9,15 @@ from sources.models import Source
 from lead.models import Lead
 from conversation.models import Conversation, Message
 from lead.services.bot_service import send_to_bot
+from notifications.services import handle_new_lead
 
 
 class MessageView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+        print("🔥 WEBHOOK / API HIT")
+        print("DATA:", request.data)
         external_id = request.data.get("external_id")
         if not external_id:
             return Response(
@@ -64,8 +67,18 @@ class MessageView(APIView):
             sender_type="client",
             message={"text": text}
         )
+        handle_new_lead(
+    client=client,
+    user=request.user,
+    source=source,
+    text=text
+)
 
-# BOT RESPONSE
+
+
+
+
+       # BOT RESPONSE
         bot_response = send_to_bot(
             client_id=external_id,
             message=text,
@@ -82,7 +95,7 @@ class MessageView(APIView):
             conversation.current_state
         )
         print("STATE AFTER:", conversation.current_state)
-        # ATTRIBUTE MERGE (🔥 CORE FIX)
+        # ATTRIBUTE MERGE ( CORE FIX)
         # print("BEFORE MERGE:", conversation.user_attributes)
 
         new_attrs = bot_response.get("extracted_attributes", {})

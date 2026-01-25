@@ -23,7 +23,8 @@ urlpatterns = [
     path("",include("accounts.urls")),
     path("",include("lead.urls")),
     path("",include("clients.urls")),
-    path("",include("conversation.urls"))
+    path("",include("conversation.urls")),
+    path("",include("notifications.urls")),
 ]
 
 if settings.DEBUG:

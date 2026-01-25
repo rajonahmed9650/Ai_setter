@@ -13,7 +13,7 @@ class Notifications(models.Model):
 
 
 class Notifications_settings(models.Model):
-    user_id = models.ForeignKey(User,on_delete=models.CASCADE)
+    user_id = models.OneToOneField(User,on_delete=models.CASCADE)
     new_lead = models.BooleanField(default=True)
     booking = models.BooleanField(default=True)
     sync_failures = models.BooleanField(default=True)

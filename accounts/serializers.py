@@ -11,6 +11,7 @@ class LoginSerializer(serializers.Serializer):
 
     access = serializers.CharField(read_only=True)
     refresh = serializers.CharField(read_only=True)
+    is_staff = serializers.BooleanField(read_only=True)
 
     def validate(self, data):
         email = data["email"]
@@ -30,6 +31,7 @@ class LoginSerializer(serializers.Serializer):
         refresh = RefreshToken.for_user(user)
 
         return {
+            "user": user,                      
             "access": str(refresh.access_token),
             "refresh": str(refresh),
             "is_staff": user.is_staff,

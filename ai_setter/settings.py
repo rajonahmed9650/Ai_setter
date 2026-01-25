@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     "accounts.apps.AccountsConfig",
+    "channels",
     "clients",
     "sources",
     "lead",
@@ -49,6 +50,18 @@ INSTALLED_APPS = [
     "bookings",
     "notifications",
 ]
+
+ASGI_APPLICATION = "ai_setter.asgi.application"
+
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

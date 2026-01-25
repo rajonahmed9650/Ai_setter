@@ -21,7 +21,10 @@ from .utils.otp import(
 )
 from .models import Profile
 from .permissions import IsOwnerAdmin
+from notifications.models import Notifications_settings
 User = get_user_model()
+
+
 
 class LoginView(APIView):
     permission_classes = [AllowAny]
@@ -29,7 +32,25 @@ class LoginView(APIView):
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        return Response(serializer.validated_data)
+
+        user = serializer.validated_data["user"]
+
+        Notifications_settings.objects.get_or_create(
+            user_id=user
+        )
+
+        data = serializer.validated_data.copy()
+        data.pop("user") 
+        
+
+        return Response({
+            "success": True,
+            "message": "Login successful",
+            "email": user.email, 
+            "data": data
+        })
+
+
 
 
 class ForgotPassowordView(APIView):
