@@ -90,7 +90,7 @@ class OTPVerifyView(APIView):
         if saved_otp != otp_input:
             return Response({"error": "Invalid OTP"}, status=400)
 
-        # ✅ OTP verified → EMAIL cache এ রাখো
+        # OTP verified → EMAIL cache 
         cache.set("otp_verified_email", email, timeout=300)  # 5 min
 
         # cleanup

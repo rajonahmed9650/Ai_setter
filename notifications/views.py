@@ -5,14 +5,17 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
+from .pagination import NotificationPagination
 
 class NotificationAPiview(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self,request):
-        notifications = Notifications.objects.all()
-        serializer = NotificationSerializer(notifications,many=True)
-        return Response(serializer.data)
+        notifications = Notifications.objects.all().order_by("-created_at")
+        paginator = NotificationPagination()
+        page = paginator.paginate_queryset(notifications,request)
+        serializer = NotificationSerializer(page,many=True)
+        return paginator.get_paginated_response(serializer.data)
     
 class NotificationMark(APIView):
     permission_classes = [IsAuthenticated]
@@ -50,7 +53,7 @@ class NotificationSettingsView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        # ✅ CORRECT
+       
         settings = request.user.notifications_settings
 
         return Response({
@@ -62,7 +65,7 @@ class NotificationSettingsView(APIView):
         })
 
     def patch(self, request):
-        # ✅ CORRECT
+        
         settings = request.user.notifications_settings
 
         for key, value in request.data.items():

@@ -16,8 +16,6 @@ class MessageView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        print("🔥 WEBHOOK / API HIT")
-        print("DATA:", request.data)
         external_id = request.data.get("external_id")
         if not external_id:
             return Response(
@@ -73,11 +71,6 @@ class MessageView(APIView):
     source=source,
     text=text
 )
-
-
-
-
-
        # BOT RESPONSE
         bot_response = send_to_bot(
             client_id=external_id,
@@ -85,31 +78,21 @@ class MessageView(APIView):
             current_state=conversation.current_state,
             user_attributes=conversation.user_attributes,
         )
-     
-
-
-        # STATE UPDATE
-        print("STATE BEFORE:", conversation.current_state)
+        # STATE UPDATE       
         conversation.current_state = bot_response.get(
             "next_state",
             conversation.current_state
         )
-        print("STATE AFTER:", conversation.current_state)
+
         # ATTRIBUTE MERGE ( CORE FIX)
-        # print("BEFORE MERGE:", conversation.user_attributes)
-
-        new_attrs = bot_response.get("extracted_attributes", {})
+    
+        new_attrs = bot_response.get("extracted_attributes") or {}
         conversation.user_attributes.update(new_attrs)
-
-        # print("AFTER MERGE:", conversation.user_attributes)
-
 
         # SAVE MEMORY
         conversation.last_message = bot_response.get("reply")
         conversation.save()
-
-
-
+        
         # 8️ Update Lead meta
         lead.last_response = timezone.now()
         lead.save()
