@@ -1,6 +1,10 @@
 import requests
+import os
+from dotenv import load_dotenv
 
-BOT_URL = "http://172.252.13.97:8024/process-message"
+load_dotenv()
+
+BOT_URL = os.getenv("BOT_URL")
 
 def send_to_bot(client_id, message, current_state, user_attributes):
     payload = {
@@ -14,7 +18,6 @@ def send_to_bot(client_id, message, current_state, user_attributes):
         response = requests.post(
             BOT_URL,
             json=payload,
-            timeout=10
         )
         response.raise_for_status()
         return response.json()

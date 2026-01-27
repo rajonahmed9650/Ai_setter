@@ -4,7 +4,7 @@ from rest_framework import status
 from .models import Question,LeadScoringRule
 from .serializers import QuestionSerializer,LeadScroingRuleSerializer
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 
 
 # Create your views here.
@@ -12,7 +12,7 @@ from rest_framework.permissions import AllowAny
 
 class QuestionListApiView(APIView):
     authentication_classes = []
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def get(self,request):
         questions = Question.objects.all()
         serializer = QuestionSerializer(questions,many=True)
@@ -27,7 +27,7 @@ class QuestionListApiView(APIView):
 
 class QuestionDetailsApiView(APIView):
     authentication_classes = []
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def get_obj(self,pk):
         try:
             return Question.objects.get(pk=pk)
@@ -59,7 +59,7 @@ class QuestionDetailsApiView(APIView):
 
 class LeadScoringApiView(APIView):
     authentication_classes = []
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def get(self,request):
         leadscores = LeadScoringRule.objects.all()
         serializers = LeadScroingRuleSerializer(leadscores,many=True)
@@ -73,7 +73,7 @@ class LeadScoringApiView(APIView):
 
 class LeadScoringDetailsView(APIView):
     authentication_classes = []
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     def get_Obj(self,pk):
         try:
             return LeadScoringRule.objects.get(pk=pk)

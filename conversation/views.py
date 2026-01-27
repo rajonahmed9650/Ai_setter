@@ -2,14 +2,14 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from .serializers import ConversationSerializer,MessageSerializer
 from .models import Conversation,Message
 from notifications.pagination import NotificationPagination
 # Create your views here.
 
 class ConversationApiview(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self,request):
         conversation = Conversation.objects.all().order_by("-created_at")
@@ -23,7 +23,7 @@ class ConversationApiview(APIView):
 
 
 class ConversationMessageApiView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def get(self,request,conversation_id):
         conversation = Conversation.objects.filter(id=conversation_id).first()

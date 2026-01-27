@@ -11,7 +11,7 @@ from clients.webhooks.facebook_sender import send_facebook_reply
 class FacebookWebhookView(APIView):
     permission_classes = [AllowAny]
 
-    # 🔐 Verification
+    #Verification
     def get(self, request):
         if (
             request.GET.get("hub.mode") == "subscribe"
@@ -20,7 +20,7 @@ class FacebookWebhookView(APIView):
             return Response(request.GET.get("hub.challenge"))
         return Response(status=403)
 
-    # 📩 Receive messages
+    # Receive messages
     def post(self, request):
         for entry in request.data.get("entry", []):
             for event in entry.get("messaging", []):
