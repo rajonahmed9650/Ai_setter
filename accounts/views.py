@@ -154,10 +154,19 @@ class ProfileView(APIView):
         })
 
 class CreateUserView(APIView):
-    permission_classes = [IsAuthenticated,IsOwnerAdmin]
+    permission_classes = [IsAuthenticated, IsOwnerAdmin]
 
-    def post(self,request):
-        serializer = CreateUserSerializer(data = request.data)
+    def post(self, request):
+        serializer = CreateUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response({"message": "User created successfully"},status=201)
+        user = serializer.save()
+
+        return Response(
+            {
+                "id":user.id,
+                "message": "User created successfully",
+                "email": user.email
+            },
+            status=201
+        )
+

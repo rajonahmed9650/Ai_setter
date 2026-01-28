@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.conf import settings
+from django.http import HttpResponse   # ✅ ADD THIS
 
 from clients.views import MessageView
 from clients.webhooks.facebook_sender import send_facebook_reply
@@ -11,16 +12,20 @@ from clients.webhooks.facebook_sender import send_facebook_reply
 class FacebookWebhookView(APIView):
     permission_classes = [AllowAny]
 
-    #Verification
+    # ✅ Webhook Verification (IMPORTANT FIX)
     def get(self, request):
         if (
             request.GET.get("hub.mode") == "subscribe"
             and request.GET.get("hub.verify_token") == settings.FB_VERIFY_TOKEN
         ):
-            return Response(request.GET.get("hub.challenge"))
-        return Response(status=403)
+            return HttpResponse(
+                request.GET.get("hub.challenge"),
+                content_type="text/plain"
+            )
 
-    # Receive messages
+        return HttpResponse("Forbidden", status=403)
+
+    # Receive messages (THIS PART IS OK)
     def post(self, request):
         for entry in request.data.get("entry", []):
             for event in entry.get("messaging", []):
