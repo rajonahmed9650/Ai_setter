@@ -14,7 +14,7 @@ class LeadScroingRuleSerializer(serializers.ModelSerializer):
 
 
 class LeadSerializer(serializers.ModelSerializer):
-    client = ClientSerializers(source = "client_id", read_only = True)
+    # client = ClientSerializers(source = "client_id", read_only = True)
     class Meta:
         model = Lead
-        fields = ["id","score","status","last_response","client"]
+        fields = ["id","client_id","score","status","last_response",]

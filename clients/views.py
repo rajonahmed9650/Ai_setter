@@ -10,6 +10,7 @@ from lead.models import Lead
 from conversation.models import Conversation, Message
 from lead.services.bot_service import send_to_bot
 from notifications.services import handle_new_lead
+from .services.hubspot_service import sync_lead_to_hubspot
 
 
 class MessageView(APIView):
@@ -66,11 +67,11 @@ class MessageView(APIView):
             message={"text": text}
         )
         handle_new_lead(
-    client=client,
-    user=request.user,
-    source=source,
-    text=text
-)
+            client=client,
+            user=request.user,
+            source=source,
+            text=text
+        )
        # BOT RESPONSE
         bot_response = send_to_bot(
             client_id=external_id,
@@ -78,6 +79,9 @@ class MessageView(APIView):
             current_state=conversation.current_state,
             user_attributes=conversation.user_attributes,
         )
+
+        print("🤖 BOT RESPONSE:", bot_response)
+
         # STATE UPDATE       
         conversation.current_state = bot_response.get(
             "next_state",
@@ -93,6 +97,21 @@ class MessageView(APIView):
         conversation.last_message = bot_response.get("reply")
         conversation.save()
         
+        progress_score = bot_response.get("progress_score")
+
+        lead.score = progress_score
+
+        if progress_score >= 80:
+            lead.status = "hot lead"
+            sync_lead_to_hubspot(lead)
+
+        elif progress_score >=50:
+            lead.status ="warm lead"
+            sync_lead_to_hubspot(lead)
+        else:
+            lead.status = "nature"
+            sync_lead_to_hubspot(lead)
+
         # 8️ Update Lead meta
         lead.last_response = timezone.now()
         lead.save()
@@ -109,6 +128,7 @@ class MessageView(APIView):
                 "reply": bot_response.get("reply"),
                 "next_state": conversation.current_state,
                 "extracted_attributes": conversation.user_attributes,
+                
             },
             status=status.HTTP_200_OK
         )
