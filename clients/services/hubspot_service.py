@@ -30,5 +30,5 @@ def sync_lead_to_hubspot(lead):
         print("✅ HubSpot contact synced")
         return True
 
-    print("❌ HubSpot error:", response.status_code, response.text)
+    # print("❌ HubSpot error:", response.status_code, response.text)
     return False

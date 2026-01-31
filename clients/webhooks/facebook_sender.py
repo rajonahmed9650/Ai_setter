@@ -2,7 +2,7 @@ import requests
 import time    
 from django.conf import settings
 
-def send_facebook_reply(recipient_id, text):
+def send_facebook_dm(recipient_id, text):
 
     words = len(text.split())
 
@@ -29,3 +29,19 @@ def send_facebook_reply(recipient_id, text):
     }
 
     requests.post(url, params=params, json=payload)
+
+
+
+
+
+def reply_to_comment(comment_id, text):
+    url = f"https://graph.facebook.com/v18.0/{comment_id}/comments"
+    params = {"access_token": settings.FB_PAGE_ACCESS_TOKEN}
+    payload = {"message": text}
+    requests.post(url, params=params, json=payload, timeout=10)
+   
+def send_facebook_reply(target_id, text, reply_type="dm"):
+    if reply_type == "dm":
+        send_facebook_dm(target_id, text)
+    elif reply_type == "comment":
+        reply_to_comment(target_id, text)
