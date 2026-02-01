@@ -136,6 +136,11 @@ Control.ca-list
 Control.ca-bundle 
 Control.system-ca-bundle 
 GitHub.sublime-settings 
+# Google OAuth / YouTube credentials
+youtube_credentials/client_secret.json
+youtube_credentials/token.pickle
+youtube_credentials/*.json
+youtube_credentials/*.pickle
 
 youtube_credentials
 
