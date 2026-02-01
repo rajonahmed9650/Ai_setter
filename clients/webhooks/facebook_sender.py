@@ -39,6 +39,8 @@ def reply_to_comment(comment_id, text):
     params = {"access_token": settings.FB_PAGE_ACCESS_TOKEN}
     payload = {"message": text}
     requests.post(url, params=params, json=payload, timeout=10)
+    # print("FB COMMENT REPLY STATUS:", res.status_code)
+    # print("FB COMMENT REPLY BODY:", res.text)
    
 def send_facebook_reply(target_id, text, reply_type="dm"):
     if reply_type == "dm":

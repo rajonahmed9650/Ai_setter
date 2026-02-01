@@ -7,8 +7,9 @@ from lead.services.bot_service import send_to_bot
 from notifications.services import handle_new_lead
 from .hubspot_service import sync_lead_to_hubspot
 from clients.webhooks.facebook_sender import send_facebook_reply
+from youtube.services.reply import send_youtube_comment_reply
 
-DEBOUNCE_SECONDS = 7
+DEBOUNCE_SECONDS = 5
 BUFFER_TTL = 15
 
 
@@ -65,14 +66,22 @@ def process_combined_message(
     client,
     lead,
     conversation,
-    request_user
+    request_user,
+    comment_id=None
 ):
+    print("commet _id:",comment_id)
+    print("🔥 process_combined_message CALLED")
+
     #  Save client combined message
     Message.objects.create(
         conversation_id=conversation,
         sender_type="client",
-        message={"text": combined_text}
+        message={"text": combined_text},
+        platform=source.platform,
+        external_comment_id=comment_id 
     )
+
+
 
     handle_new_lead(
         client=client,
@@ -81,7 +90,6 @@ def process_combined_message(
         text=combined_text
     )
 
-    #  BOT CALL (reply তৈরি হচ্ছে এখানে)
     bot_response = send_to_bot(
         client_id=external_id,
         message=combined_text,
@@ -122,15 +130,37 @@ def process_combined_message(
     Message.objects.create(
         conversation_id=conversation,
         sender_type="bot",
-        message=bot_response
+        message=bot_response,
+        platform=source.platform,
+        external_comment_id=comment_id
     )
 
+
+
     
-    send_facebook_reply(
-        external_id,                 
-        bot_response.get("reply"),   
-        reply_type="dm"
-    )
+    reply_text = bot_response.get("reply")
+
+    if comment_id:
+        print("📤 SENDING COMMENT REPLY")
+        send_facebook_reply(
+            comment_id,          
+            reply_text,
+            reply_type="comment"
+        )
+    else:
+        print("📤 SENDING DM REPLY")
+        send_facebook_reply(
+            external_id,        
+            reply_text,
+            reply_type="dm"
+        )
+
+    if source.platform == "youtube" and comment_id:
+        print("📤 Sending YouTube comment reply")
+        send_youtube_comment_reply(
+            parent_comment_id=comment_id,
+            text=reply_text
+        )
 
     
 

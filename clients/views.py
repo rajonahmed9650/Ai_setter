@@ -17,30 +17,46 @@ class MessageView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
+
+        comment_id = request.data.get("comment_id")
+        print("MESSAGEVIEW COMMENT_ID:", comment_id)
+
         external_id = request.data.get("external_id")
         text = request.data.get("message")
         platform = request.data.get("platform", "test")
         page_id = request.data.get("page_id")
+        sender_name = request.data.get("sender_name")
+
 
         if not external_id or not text:
             return Response(
                 {"error": "external_id and message required"},
                 status=status.HTTP_400_BAD_REQUEST
             )
-
+        if comment_id:
+            source_type = "post_comment"
+        else:
+            source_type = "dm"
         source, _ = Source.objects.get_or_create(
             platform=platform,
-            defaults={"page_id": page_id}
+            source_type=source_type,
         )
-        source.app_id = page_id
-        source.save()
+   
+        # update app_id if missing
+        if page_id and not source.app_id:
+            source.app_id = page_id
+            source.save()
 
         client, _ = Client.objects.get_or_create(
             external_id=external_id,
             source_id=source
         )
 
-        if not client.name:
+        if sender_name and not client.name:
+            client.name = sender_name
+            client.save()
+                               
+        elif not client.name:
             name = fetch_sender_name(external_id)
             if name:
                 client.name = name
@@ -73,6 +89,7 @@ class MessageView(APIView):
                 lead=lead,
                 conversation=conversation,
                 request_user=request.user,
+                comment_id=comment_id
             )
         )
 

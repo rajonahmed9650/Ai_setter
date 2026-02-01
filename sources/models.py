@@ -14,13 +14,21 @@ class Source(models.Model):
         ("dm", "Direct Message"),
         ("post_comment", "Post Comment"),
     )
-    platform = models.CharField(max_length=50,choices=PLATFORM_CHOICES,unique=True)
+
+    platform = models.CharField(
+        max_length=50,
+        choices=PLATFORM_CHOICES
+    )
     source_type = models.CharField(
         max_length=50,
         choices=SOURCE_TYPE_CHOICES
     )
-    app_id = models.IntegerField(null=True, blank=True)
+    app_id = models.CharField(null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ("platform", "source_type")
+
     
