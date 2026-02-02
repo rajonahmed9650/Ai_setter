@@ -18,10 +18,17 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv(BASE_DIR / ".env")
 
-YOUTUBE_CLIENT_SECRET_PATH = BASE_DIR / "youtube_credentials/client_secret.json"
-YOUTUBE_TOKEN_PATH = BASE_DIR / "youtube_credentials/token.pickle"
-YOUTUBE_CHANNEL_ID = "UCZF5iEP20TPDjZbq2gOb_wA"
+YOUTUBE_CLIENT_SECRET_PATH = BASE_DIR / os.getenv(
+    "YOUTUBE_CLIENT_SECRET_PATH"
+)
+
+YOUTUBE_TOKEN_PATH = BASE_DIR / os.getenv(
+    "YOUTUBE_TOKEN_PATH"
+)
+
+YOUTUBE_CHANNEL_ID = os.getenv("YOUTUBE_CHANNEL_ID")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
