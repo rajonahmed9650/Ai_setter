@@ -17,7 +17,7 @@ class YoutubeConfig(AppConfig):
         scheduler.add_job(
             youtube_comment_job,
             "interval",
-            minutes=5,
+            minutes=59,
             max_instances=1,
             coalesce=True,
             id="youtube_comment_job"

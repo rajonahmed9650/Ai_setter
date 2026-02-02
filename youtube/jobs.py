@@ -17,7 +17,7 @@ def youtube_comment_job():
     for c in comments:
         comment_id = c["comment_id"]
 
-        # 🔥 DUPLICATE CHECK
+        #  DUPLICATE CHECK
         already_processed = Message.objects.filter(
             platform="youtube",
             external_comment_id=comment_id,

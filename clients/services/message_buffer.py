@@ -9,7 +9,7 @@ from .hubspot_service import sync_lead_to_hubspot
 from clients.webhooks.facebook_sender import send_facebook_reply
 from youtube.services.reply import send_youtube_comment_reply
 
-DEBOUNCE_SECONDS = 5
+DEBOUNCE_SECONDS = 10    
 BUFFER_TTL = 15
 
 

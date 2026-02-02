@@ -19,6 +19,9 @@ load_dotenv()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+YOUTUBE_CLIENT_SECRET_PATH = BASE_DIR / "youtube_credentials/client_secret.json"
+YOUTUBE_TOKEN_PATH = BASE_DIR / "youtube_credentials/token.pickle"
+YOUTUBE_CHANNEL_ID = "UCZF5iEP20TPDjZbq2gOb_wA"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
