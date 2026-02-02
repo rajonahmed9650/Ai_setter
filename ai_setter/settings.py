@@ -30,9 +30,11 @@ YOUTUBE_CHANNEL_ID = "UCZF5iEP20TPDjZbq2gOb_wA"
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
+    "test14.fireai.agency",
+    "www.test14.fireai.agency"
     "127.0.0.1",
     "localhost",
     "thymiest-layton-doctrinally.ngrok-free.dev",
@@ -152,11 +154,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# settings.py
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 from datetime import timedelta
 
