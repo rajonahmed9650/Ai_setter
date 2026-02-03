@@ -180,3 +180,9 @@ Copyright 2017 - 2021 | Stan Triepels - Djangowaves
 
 Privacy Policy | Terms of Serviceyoutube_credentials/
 *.pickle
+# Python
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
