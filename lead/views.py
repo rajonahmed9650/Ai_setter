@@ -5,13 +5,14 @@ from .models import Question,LeadScoringRule
 from .serializers import QuestionSerializer,LeadScroingRuleSerializer
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 # Create your views here.
 
 
 class QuestionListApiView(APIView):
-    authentication_classes = []
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self,request):
         questions = Question.objects.all()
@@ -26,7 +27,7 @@ class QuestionListApiView(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class QuestionDetailsApiView(APIView):
-    authentication_classes = []
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def get_obj(self,pk):
         try:
@@ -58,7 +59,7 @@ class QuestionDetailsApiView(APIView):
     
 
 class LeadScoringApiView(APIView):
-    authentication_classes = []
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self,request):
         leadscores = LeadScoringRule.objects.all()
@@ -72,7 +73,7 @@ class LeadScoringApiView(APIView):
         return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
 
 class LeadScoringDetailsView(APIView):
-    authentication_classes = []
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def get_Obj(self,pk):
         try:

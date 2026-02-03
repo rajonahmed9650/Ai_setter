@@ -37,14 +37,14 @@ YOUTUBE_CHANNEL_ID = os.getenv("YOUTUBE_CHANNEL_ID")
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
-    "test14.fireai.agency",
-    "www.test14.fireai.agency"
+    # "test14.fireai.agency",
+    # "www.test14.fireai.agency"
     "127.0.0.1",
     "localhost",
-    "thymiest-layton-doctrinally.ngrok-free.dev",
+    # "thymiest-layton-doctrinally.ngrok-free.dev",
 ]
 
 
@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "bookings",
     "notifications",
     "youtube",
+    "corsheaders",
 ]
 
 ASGI_APPLICATION = "ai_setter.asgi.application"
@@ -87,12 +88,19 @@ CHANNEL_LAYERS = {
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+]
+
 
 ROOT_URLCONF = 'ai_setter.urls'
 

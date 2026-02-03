@@ -25,6 +25,8 @@ class FacebookWebhookView(APIView):
 
     def post(self, request):
 
+        print("webhook hit")
+
         print(request.data)
 
 
