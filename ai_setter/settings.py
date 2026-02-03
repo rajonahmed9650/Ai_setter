@@ -40,11 +40,11 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    # "test14.fireai.agency",
-    # "www.test14.fireai.agency"
+    "test14.fireai.agency",
+    "www.test14.fireai.agency"
     "127.0.0.1",
     "localhost",
-    # "thymiest-layton-doctrinally.ngrok-free.dev",
+    "thymiest-layton-doctrinally.ngrok-free.dev",
 ]
 
 
