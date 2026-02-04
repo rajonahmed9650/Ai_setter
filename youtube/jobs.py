@@ -3,6 +3,21 @@ from rest_framework.test import APIRequestFactory
 import time
 
 
+def register_youtube_job(scheduler):
+    scheduler.add_job(
+        youtube_comment_job,
+        trigger="interval",
+        minutes=59,
+        id="youtube_comment_job",
+        replace_existing=True,
+        max_instances=1,
+        coalesce=True,
+    )
+
+
+
+
+
 def youtube_comment_job():
     # SAFE IMPORTS
     from django.contrib.auth.models import AnonymousUser
@@ -72,3 +87,5 @@ def youtube_comment_job():
                 parent_comment_id=c["comment_id"],
                 text=reply_text
             )
+
+

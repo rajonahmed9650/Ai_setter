@@ -71,6 +71,9 @@ def process_combined_message(
 ):
     print("commet _id:",comment_id)
     print("🔥 process_combined_message CALLED")
+    is_comment = bool(comment_id)
+
+    
 
     #  Save client combined message
     Message.objects.create(
@@ -90,42 +93,52 @@ def process_combined_message(
         text=combined_text
     )
 
-    bot_response = send_to_bot(
-        client_id=external_id,
-        message=combined_text,
-        current_state=conversation.current_state,
-        user_attributes=conversation.user_attributes,
-    )
+    if is_comment:
+        from lead.services.bot_service import send_to_comment_bot
+
+        bot_response = send_to_comment_bot(
+            platform=source.platform,
+            user_id=external_id,
+            comment_text=combined_text
+        )
+    else:
+        bot_response = send_to_bot(
+            client_id=external_id,
+            message=combined_text,
+            current_state=conversation.current_state,
+            user_attributes=conversation.user_attributes,
+        )
 
     print("🤖 BOT FULL RESPONSE =", bot_response)
     print("🤖 BOT REPLY =", bot_response.get("reply"))
     #  Save bot reply (DB)
-    conversation.current_state = bot_response.get(
-        "next_state",
-        conversation.current_state
-    )
+    if not is_comment: 
+        conversation.current_state = bot_response.get(
+            "next_state",
+            conversation.current_state
+        )
 
-    conversation.user_attributes.update(
-        bot_response.get("extracted_attributes") or {}
-    )
+        conversation.user_attributes.update(
+            bot_response.get("extracted_attributes") or {}
+        )
 
-    conversation.last_message = bot_response.get("reply")
-    conversation.save()
+        conversation.last_message = bot_response.get("reply")
+        conversation.save()
 
-    #  Lead update
-    progress_score = bot_response.get("progress_score", 0)
-    lead.score = progress_score
+        #  Lead update
+        progress_score = bot_response.get("progress_score", 0)
+        lead.score = progress_score
 
-    if progress_score >= 80:
-        lead.status = "hot lead"
-        sync_lead_to_hubspot(lead)
-    elif progress_score >= 50:
-        lead.status = "warm lead"
-    else:
-        lead.status = "nature"
+        if progress_score >= 80:
+            lead.status = "hot lead"
+            sync_lead_to_hubspot(lead)
+        elif progress_score >= 50:
+            lead.status = "warm lead"
+        else:
+            lead.status = "nature"
 
-    lead.last_response = timezone.now()
-    lead.save()
+        lead.last_response = timezone.now()
+        lead.save()
 
     Message.objects.create(
         conversation_id=conversation,
@@ -136,9 +149,16 @@ def process_combined_message(
     )
 
 
+    if is_comment:
+        reply_text = bot_response.get("reply_text")
+    else:
+        reply_text = bot_response.get("reply")
 
-    
-    reply_text = bot_response.get("reply")
+
+    if not reply_text or not reply_text.strip():
+        print("⚠️ Empty reply — skipping send")
+        return
+
 
     if comment_id:
         print("📤 SENDING COMMENT REPLY")

@@ -1,7 +1,5 @@
-# youtube/apps.py
 import os
 from django.apps import AppConfig
-from apscheduler.schedulers.background import BackgroundScheduler
 
 class YoutubeConfig(AppConfig):
     name = "youtube"
@@ -10,17 +8,8 @@ class YoutubeConfig(AppConfig):
         if os.environ.get("RUN_MAIN") != "true":
             return
 
-        #  IMPORT INSIDE ready()
-        from youtube.jobs import youtube_comment_job
+        from youtube.scheduler import start_scheduler
+        from youtube.bootstrap import bootstrap_jobs
 
-        scheduler = BackgroundScheduler()
-        scheduler.add_job(
-            youtube_comment_job,
-            "interval",
-            minutes=59,
-            max_instances=1,
-            coalesce=True,
-            id="youtube_comment_job"
-        )
-
-        scheduler.start()
+        bootstrap_jobs()
+        start_scheduler()

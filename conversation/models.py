@@ -8,6 +8,7 @@ class Conversation(models.Model):
     current_state = models.CharField(max_length=50, null=True, blank=True)
     user_attributes = models.JSONField(default=dict)
     last_message = models.TextField()
+    last_followup_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -28,6 +29,7 @@ class Message(models.Model):
         blank=True,
         db_index=True
     )
+    is_followup = models.BooleanField(default=False)
 
 
     created_at = models.DateTimeField(auto_now_add=True)
