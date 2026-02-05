@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.conf import settings
 # Create your models here.
 
 class Source(models.Model):
@@ -13,6 +13,13 @@ class Source(models.Model):
     SOURCE_TYPE_CHOICES = (
         ("dm", "Direct Message"),
         ("post_comment", "Post Comment"),
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="sources",
+        null=True,
+        blank=True
     )
 
     platform = models.CharField(

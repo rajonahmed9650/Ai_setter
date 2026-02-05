@@ -3,31 +3,28 @@ from asgiref.sync import async_to_sync
 from .models import Notifications
 
 
-def create_notification(user, message, notif_type):
-    """
-    Always save notification in DB
-    """
+def create_notification(client, message):
     return Notifications.objects.create(
+        client_id=client,
         message=message,
-        notif_type=notif_type,
         is_read=False
     )
 
 
-def push_notification_if_allowed(user, message, notif_type):
-    """
-    Push only if user settings allow
-    """
-    settings = user.notificationsettings
+def push_notification_if_allowed(user, client, message, notif_type):
+    print("🚀 push_notification_if_allowed CALLED FOR USER:", user)
 
-    # settings OFF হলে push যাবে না
+    settings = user.notifications_settings  # ✅ correct relation
+
     if not getattr(settings, notif_type, False):
         print("🔕 PUSH BLOCKED BY SETTINGS")
         return
+
     print("🔔 PUSHING WEBSOCKET NOTIFICATION")
+
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        f"notifications_{user.id}",
+        f"notifications_client_{client.external_id}",  # ✅ matches WS
         {
             "type": "send_notification",
             "message": message

@@ -8,6 +8,8 @@ from notifications.services import handle_new_lead
 from .hubspot_service import sync_lead_to_hubspot
 from clients.webhooks.facebook_sender import send_facebook_reply
 from youtube.services.reply import send_youtube_comment_reply
+from notifications.utils import push_notification_if_allowed
+
 
 DEBOUNCE_SECONDS = 10    
 BUFFER_TTL = 15
@@ -86,12 +88,15 @@ def process_combined_message(
 
 
 
+# 🔔 NEW LEAD NOTIFICATION (DB + WS)
     handle_new_lead(
         client=client,
-        user=request_user,
+        user=source.user,     # 🔑 IMPORTANT: dashboard owner user
         source=source,
         text=combined_text
     )
+
+    
 
     if is_comment:
         from lead.services.bot_service import send_to_comment_bot
@@ -173,6 +178,15 @@ def process_combined_message(
             external_id,        
             reply_text,
             reply_type="dm"
+        )
+
+
+        owner_user = source.user
+        push_notification_if_allowed(
+            user=owner_user,          # dashboard user
+            client=client,              # message sender
+            message=f"📩 New message from {client.name or 'Client'}",
+            notif_type="new_lead"
         )
 
     if source.platform == "youtube" and comment_id:

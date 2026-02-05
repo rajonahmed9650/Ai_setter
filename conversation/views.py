@@ -6,6 +6,9 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import ConversationSerializer,MessageSerializer
 from .models import Conversation,Message
 from notifications.pagination import NotificationPagination
+from lead.models import Lead
+from django.utils import timezone
+from datetime import timedelta
 # Create your views here.
 
 class ConversationApiview(APIView):
@@ -42,3 +45,40 @@ class ConversationMessageApiView(APIView):
             "messages": serializer.data
         })
     
+
+
+
+class DashboardApiView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        # 🔹 Total messages (client + bot)
+        total_message = Message.objects.count()
+
+        # 🔹 Identified leads (warm + hot)
+        total_leads = Lead.objects.filter(
+            status__in=["warm lead", "hot lead"]
+        ).count()
+
+        today = timezone.now().date()
+        data = []
+
+        # 🔹 Day-wise ALL messages (bot + client)
+        for i in range(6, -1, -1):
+            day = today - timedelta(days=i)
+
+            count = Message.objects.filter(
+                created_at__date=day
+            ).count()
+
+            data.append({
+                "day": day.strftime("%a"),
+                "count": count
+            })
+
+        return Response({
+            "total_message": total_message,
+            "total_leads": total_leads,
+            "data": data
+        })   

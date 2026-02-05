@@ -78,7 +78,7 @@ INSTALLED_APPS = [
     "lead",
     "conversation",
     "bookings",
-    "notifications",
+    "notifications.apps.NotificationsConfig",
     "youtube",
     "corsheaders",
 ]

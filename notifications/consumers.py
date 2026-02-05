@@ -3,6 +3,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 
 class NotificationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        print("🔌 CONNECT HIT")
+        print("CHANNEL LAYER:", self.channel_layer)
         self.client_id = self.scope["url_route"]["kwargs"]["client_id"]
         self.group_name = f"notifications_client_{self.client_id}"
 

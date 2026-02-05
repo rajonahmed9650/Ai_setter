@@ -4,7 +4,7 @@ def register_followup_job(scheduler):
     scheduler.add_job(
         followup_job,
         trigger="interval",
-        minutes=1,
+        minutes=50,
         id="dm_followup_job",
         replace_existing=True,
         max_instances=1,
