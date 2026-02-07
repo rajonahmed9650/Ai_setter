@@ -16,7 +16,7 @@ FOLLOWUP_RULES = [
     {
         "min": 61,
         "max": 100,
-        "delay": timedelta(minutes=1),
+        "delay": timedelta(minutes=10),
         "message": "Hey — just following up real quick.\nDid you see my last message?"
     },
 ]

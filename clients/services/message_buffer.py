@@ -89,12 +89,12 @@ def process_combined_message(
 
 
 # 🔔 NEW LEAD NOTIFICATION (DB + WS)
-    handle_new_lead(
-        client=client,
-        user=source.user,     # 🔑 IMPORTANT: dashboard owner user
-        source=source,
-        text=combined_text
-    )
+    # handle_new_lead(
+    #     client=client,
+    #     user=source.user,     # 🔑 IMPORTANT: dashboard owner user
+    #     source=source,
+    #     text=combined_text
+    # )
 
     
 
@@ -145,6 +145,16 @@ def process_combined_message(
         lead.last_response = timezone.now()
         lead.save()
 
+     # 🔔 NEW LEAD (ONCE ONLY)
+    push_notification_if_allowed(
+        user=source.user,          # dashboard owner
+        client=client,
+        lead=lead,                 # 🔥 VERY IMPORTANT
+        message=f"🔥 New Lead from {source.platform}: {client.name or client.external_id}",
+        notif_type="new_lead"
+    )
+    
+
     Message.objects.create(
         conversation_id=conversation,
         sender_type="bot",
@@ -181,13 +191,13 @@ def process_combined_message(
         )
 
 
-        owner_user = source.user
-        push_notification_if_allowed(
-            user=owner_user,          # dashboard user
-            client=client,              # message sender
-            message=f"📩 New message from {client.name or 'Client'}",
-            notif_type="new_lead"
-        )
+        # owner_user = source.user
+        # push_notification_if_allowed(
+        #     user=owner_user,          # dashboard user
+        #     client=client,              # message sender
+        #     message=f"📩 New message from {client.name or 'Client'}",
+        #     notif_type="new_lead"
+        # )
 
     if source.platform == "youtube" and comment_id:
         print("📤 Sending YouTube comment reply")

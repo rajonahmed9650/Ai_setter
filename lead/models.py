@@ -10,6 +10,7 @@ class Lead(models.Model):
     client_id = models.ForeignKey(Client,on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
     status = models.CharField(max_length=50,choices=CHOICES)
+    notification_sent = models.BooleanField(default=False)
     last_response = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
