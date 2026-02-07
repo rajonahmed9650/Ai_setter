@@ -49,9 +49,9 @@ ALLOWED_HOSTS = [
     # "http://localhost:3001",
     # "thymiest-layton-doctrinally.ngrok-free.dev",
 
-
     "test14.fireai.agency",
     "www.test14.fireai.agency",
+    "172.252.13.97",
     "127.0.0.1",
     "localhost",
     "thymiest-layton-doctrinally.ngrok-free.dev",
