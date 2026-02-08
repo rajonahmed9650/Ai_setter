@@ -55,6 +55,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "thymiest-layton-doctrinally.ngrok-free.dev",
+    "https://jamie-date-ai-setter.vercel.app",
 ]
 
 
