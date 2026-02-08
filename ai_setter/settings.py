@@ -37,7 +37,7 @@ YOUTUBE_CHANNEL_ID = os.getenv("YOUTUBE_CHANNEL_ID")
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     # "test14.fireai.agency",
@@ -60,6 +60,8 @@ ALLOWED_HOSTS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://thymiest-layton-doctrinally.ngrok-free.dev",
+    "https://test14.fireai.agency",
+    "https://www.test14.fireai.agency",
 ]
 # Application definition
 
@@ -107,9 +109,9 @@ MIDDLEWARE = [
 ]
 
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-]
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",
+# ]
 
 
 ROOT_URLCONF = 'ai_setter.urls'
