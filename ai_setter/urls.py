@@ -25,6 +25,7 @@ urlpatterns = [
     path("",include("clients.urls")),
     path("",include("conversation.urls")),
     path("",include("notifications.urls")),
+    path("",include("bookings.urls")),
 ]
 
 if settings.DEBUG:
