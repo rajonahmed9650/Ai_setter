@@ -59,7 +59,7 @@ ALLOWED_HOSTS = [
 
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://thymiest-layton-doctrinally.ngrok-free.dev",
+    "http://localhost:3000",
     "https://test14.fireai.agency",
     "https://www.test14.fireai.agency",
 ]
@@ -109,9 +109,10 @@ MIDDLEWARE = [
 ]
 
 
-# CORS_ALLOWED_ORIGINS = [
-#     "http://localhost:3000",
-# ]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",          # React dev
+    "https://test14.fireai.agency",   # React prod
+]
 
 
 ROOT_URLCONF = 'ai_setter.urls'
