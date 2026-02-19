@@ -24,8 +24,6 @@ from .permissions import IsOwnerAdmin
 from notifications.models import Notifications_settings
 User = get_user_model()
 
-
-
 class LoginView(APIView):
     permission_classes = [AllowAny]
 

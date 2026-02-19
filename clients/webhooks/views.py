@@ -13,6 +13,8 @@ class FacebookWebhookView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
+        print("🔥 GET Webhook called")
+        print(request.GET)
         if (
             request.GET.get("hub.mode") == "subscribe"
             and request.GET.get("hub.verify_token") == settings.FB_VERIFY_TOKEN
@@ -27,8 +29,11 @@ class FacebookWebhookView(APIView):
 
         print("webhook hit")
 
-        print(request.data)
+        print("Incoming Data:", request.data)
 
+        platform_object = request.data.get("object")
+
+        platform_name = "instagram" if platform_object == "instagram" else "facebook"
 
         factory = APIRequestFactory()
 
@@ -38,11 +43,15 @@ class FacebookWebhookView(APIView):
                 if not message or message.get("is_echo"):
                     continue
 
+                sender_id = event.get("sender", {}).get("id")
+                page_id = event.get("recipient", {}).get("id")
+                text = message.get("text")
+
                 payload = {
-                    "external_id": event["sender"]["id"],
-                    "platform": "facebook",
-                    "message": message.get("text"),
-                    "page_id": event["recipient"]["id"],
+                    "external_id": sender_id,
+                    "platform": platform_name,
+                    "message": page_id,
+                    "page_id": text,
                 }
 
                 fake_request = factory.post(
@@ -68,10 +77,15 @@ class FacebookWebhookView(APIView):
                 user_id = from_user.get("id")
                 user_name = from_user.get("name")
 
+                # ✅ 🚫 Ignore Page's own comments (VERY IMPORTANT)
+                if user_id == settings.META_PAGE_ID:
+                    print("🚫 Ignoring Page's own comment")
+                    continue
+
                 if not comment_id or not comment_text or not user_id:
                     continue
 
-                print("💬 NEW COMMENT:", comment_text)
+                print("NEW COMMENT:", comment_text)
 
                 payload = {
                     "external_id": user_id,
@@ -79,7 +93,7 @@ class FacebookWebhookView(APIView):
                     "message": comment_text,
                     "app_id": entry.get("id"),
                     "comment_id": comment_id,
-                    "sender_name":user_name
+                    "sender_name": user_name
                 }
 
                 fake_request = factory.post(
@@ -90,6 +104,7 @@ class FacebookWebhookView(APIView):
                 fake_request.user = request.user
 
                 MessageView.as_view()(fake_request)
+
 
    
 

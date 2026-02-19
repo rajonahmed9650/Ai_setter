@@ -87,17 +87,6 @@ def process_combined_message(
     )
 
 
-
-# 🔔 NEW LEAD NOTIFICATION (DB + WS)
-    # handle_new_lead(
-    #     client=client,
-    #     user=source.user,     # 🔑 IMPORTANT: dashboard owner user
-    #     source=source,
-    #     text=combined_text
-    # )
-
-    
-
     if is_comment:
         from lead.services.bot_service import send_to_comment_bot
 
@@ -145,12 +134,12 @@ def process_combined_message(
         lead.last_response = timezone.now()
         lead.save()
 
-     # 🔔 NEW LEAD (ONCE ONLY)
+    
     push_notification_if_allowed(
-        user=source.user,          # dashboard owner
+        user=source.user,         
         client=client,
-        lead=lead,                 # 🔥 VERY IMPORTANT
-        message=f"🔥 New Lead from {source.platform}: {client.name or client.external_id}",
+        lead=lead,                 
+        message=f"New Lead from {source.platform}: {client.name or client.external_id}",
         notif_type="new_lead"
     )
     

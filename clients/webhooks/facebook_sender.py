@@ -2,7 +2,7 @@ import requests
 import time    
 from django.conf import settings
 
-def send_facebook_dm(recipient_id, text):
+def send_facebook_dm(recipient_id, text,platform="facebook"):
 
     words = len(text.split())
 
@@ -24,8 +24,13 @@ def send_facebook_dm(recipient_id, text):
         "messaging_type": "RESPONSE"
     }
 
+    if platform == "facebook":
+        access_token = settings.FB_PAGE_ACCESS_TOKEN
+    elif platform == "instagram":
+        access_token = settings.IG_PAGE_ACCESS_TOKEN 
+
     params = {
-        "access_token": settings.FB_PAGE_ACCESS_TOKEN
+        "access_token": access_token
     }
 
     requests.post(url, params=params, json=payload)
@@ -34,13 +39,22 @@ def send_facebook_dm(recipient_id, text):
 
 
 
-def reply_to_comment(comment_id, text):
-    url = f"https://graph.facebook.com/v18.0/{comment_id}/comments"
-    params = {"access_token": settings.FB_PAGE_ACCESS_TOKEN}
+def reply_to_comment(comment_id, text,platform = "facebook"):
+
+    if platform == "facebook":
+        url = f"https://graph.facebook.com/v18.0/{comment_id}/comments"
+        access_token = settings.FB_PAGE_ACCESS_TOKEN
+    elif platform == "instagram":
+        url = f"https://graph.facebook.com/v18.0/{comment_id}/replies"
+        access_token = settings.IG_PAGE_ACCESS_TOKEN    
     payload = {"message": text}
-    requests.post(url, params=params, json=payload, timeout=10)
+    params = {"access_token": access_token}
+
+    response = requests.post(url, params=params, json=payload, timeout=10)
     # print("FB COMMENT REPLY STATUS:", res.status_code)
     # print("FB COMMENT REPLY BODY:", res.text)
+    print("STATUS:", response.status_code)
+    print("BODY:", response.text)
    
 def send_facebook_reply(target_id, text, reply_type="dm"):
     if reply_type == "dm":

@@ -27,6 +27,8 @@ class MessageView(APIView):
         page_id = request.data.get("page_id")
         sender_name = request.data.get("sender_name")
 
+        print (external_id)
+
 
         if not external_id or not text:
             return Response(

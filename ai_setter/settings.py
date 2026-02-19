@@ -37,7 +37,7 @@ YOUTUBE_CHANNEL_ID = os.getenv("YOUTUBE_CHANNEL_ID")
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     # "test14.fireai.agency",
@@ -241,6 +241,11 @@ EMAIL_HOST_PASSWORD =os.getenv("EMAIL_HOST_PASSWORD")
 FB_VERIFY_TOKEN = os.getenv("FB_VERIFY_TOKEN")
 FB_PAGE_ACCESS_TOKEN =os.getenv("FB_PAGE_ACCESS_TOKEN")
 FB_APP_SECRET =os.getenv("FB_APP_SECRET")
+META_PAGE_ID =os.getenv("META_PAGE_ID")
+
+
+
+IG_PAGE_ACCESS_TOKEN = os.getenv("IG_PAGE_ACCESS_TOKEN")
 
 
 
