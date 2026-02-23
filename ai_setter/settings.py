@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     "notifications.apps.NotificationsConfig",
     "youtube",
     "corsheaders",
+    "django_apscheduler",
 ]
 
 ASGI_APPLICATION = "ai_setter.asgi.application"
