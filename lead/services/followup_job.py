@@ -3,6 +3,30 @@ from conversation.models import Conversation, Message
 from lead.services.followup_rules import FOLLOWUP_RULES
 from clients.webhooks.facebook_sender import send_facebook_reply
 
+
+
+# def booking_link_already_sent(convo):
+#     """
+#     Returns True if booking link already sent in this conversation
+#     """
+
+#     return Message.objects.filter(
+#         conversation_id=convo,
+#         sender_type="bot"
+#     ).filter(
+#         # Option 1: structured way
+#         message__type="booking_link"
+#     ).exists()
+
+
+# def booking_link_already_sent(convo):
+#     return Message.objects.filter(
+#         conversation_id=convo,
+#         sender_type="bot",
+#         message__text__icontains="http"
+#     ).exists()
+
+
 def followup_job():
     try:
         now = timezone.now()
@@ -49,6 +73,11 @@ def followup_job():
 
             if already_followed:
                 continue
+
+
+            # if booking_link_already_sent(convo):
+            #     print("⏩ SKIP: booking link already sent")
+            #     continue
 
             for rule in FOLLOWUP_RULES:
                 print("RULE:", rule)

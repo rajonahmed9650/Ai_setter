@@ -45,6 +45,7 @@ class FacebookWebhookView(APIView):
 
                 sender_id = event.get("sender", {}).get("id")
                 page_id = event.get("recipient", {}).get("id")
+                print("PAGE ID FROM WEBHOOK:", page_id)
                 text = message.get("text")
 
                 payload = {
