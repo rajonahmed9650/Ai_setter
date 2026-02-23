@@ -24,13 +24,8 @@ def send_facebook_dm(recipient_id, text,platform="facebook"):
         "messaging_type": "RESPONSE"
     }
 
-    if platform == "facebook":
-        access_token = settings.FB_PAGE_ACCESS_TOKEN
-    elif platform == "instagram":
-        access_token = settings.IG_PAGE_ACCESS_TOKEN 
-
     params = {
-        "access_token": access_token
+        "access_token":settings.FB_PAGE_ACCESS_TOKEN
     }
 
     requests.post(url, params=params, json=payload)
