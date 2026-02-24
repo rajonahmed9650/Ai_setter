@@ -10,3 +10,6 @@ class Command(BaseCommand):
         bootstrap_jobs()
         start_scheduler()
 
+
+        while True:
+            time.sleep(60)

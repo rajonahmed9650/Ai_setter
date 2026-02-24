@@ -31,6 +31,8 @@ class FacebookWebhookView(APIView):
 
         print("Incoming Data:", request.data)
 
+        
+
         platform_object = request.data.get("object")
 
         platform_name = "instagram" if platform_object == "instagram" else "facebook"
@@ -39,6 +41,8 @@ class FacebookWebhookView(APIView):
 
         for entry in request.data.get("entry", []):
             for event in entry.get("messaging", []):
+
+                print("EVENT TYPE:", event.keys())
                 message = event.get("message")
                 if not message or message.get("is_echo"):
                     continue
@@ -51,8 +55,8 @@ class FacebookWebhookView(APIView):
                 payload = {
                     "external_id": sender_id,
                     "platform": platform_name,
-                    "message": page_id,
-                    "page_id": text,
+                    "message": text,
+                    "page_id": page_id,
                 }
 
                 fake_request = factory.post(
