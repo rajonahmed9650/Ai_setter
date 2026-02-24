@@ -1,15 +1,15 @@
-import os
-from django.apps import AppConfig
+# import os
+# from django.apps import AppConfig
 
-class YoutubeConfig(AppConfig):
-    name = "youtube"
+# class YoutubeConfig(AppConfig):
+#     name = "youtube"
 
-    def ready(self):
-        if os.environ.get("RUN_MAIN") != "true":
-            return
+#     def ready(self):
+#         if os.environ.get("RUN_MAIN") != "true":
+#             return
 
-        from youtube.scheduler import start_scheduler
-        from youtube.bootstrap import bootstrap_jobs
+#         from youtube.scheduler import start_scheduler
+#         from youtube.bootstrap import bootstrap_jobs
 
-        bootstrap_jobs()
-        start_scheduler()
+#         bootstrap_jobs()
+#         start_scheduler()

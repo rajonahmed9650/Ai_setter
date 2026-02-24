@@ -7,7 +7,7 @@ def register_youtube_job(scheduler):
     scheduler.add_job(
         youtube_comment_job,
         trigger="interval",
-        minutes=59,
+        minutes=1,
         id="youtube_comment_job",
         replace_existing=True,
         max_instances=1,
